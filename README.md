@@ -11,8 +11,8 @@ O sistema mede a turbidez e o pH de uma solução e envia as leituras para um br
 - Integração com Node-RED para exibição em tempo real.
 
 ## Estrutura do repositório
-- `codigo_dispositivo/`: Código fonte do ESP32 para realizar a leitura dos sensores e enviar os dados via MQTT.
-- `codigo_low_code/`: Código JSON exportado do Node-RED, que contém o fluxo utilizado para o monitoramento.
+- `codigofonte-mqtt/`: Código fonte do ESP32 para realizar a leitura dos sensores e enviar os dados via MQTT.
+- `codigolowcode-nodered/`: Código JSON exportado do Node-RED, que contém o fluxo utilizado para o monitoramento.
 
 ## Código fonte do dispositivo
 O código do dispositivo (ESP32) conecta-se ao Wi-Fi e a um broker MQTT, realizando leituras dos sensores de turbidez e pH e publicando os valores.
@@ -25,6 +25,6 @@ O código do dispositivo (ESP32) conecta-se ao Wi-Fi e a um broker MQTT, realiza
 O código da plataforma "low code" é um fluxo JSON exportado do Node-RED, que configura o recebimento dos dados do MQTT e exibe os valores em um dashboard.
 
 ## Como usar
-1. Carregue o código do ESP32 a partir de `codigo_dispositivo/main.ino`.
-2. Importe o fluxo JSON em `codigo_low_code/fluxo_node_red.json` para o Node-RED.
+1. Carregue o código do ESP32 a partir de `codigofonte-mqtt/sketch.ino`.
+2. Importe o fluxo JSON em `codigolowcode-nodered/fluxo_node_red.json` para o Node-RED.
 3. Configure o Node-RED para conectar-se ao broker MQTT e exibir os dados.

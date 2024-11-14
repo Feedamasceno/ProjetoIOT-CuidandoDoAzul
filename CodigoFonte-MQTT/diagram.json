@@ -1,0 +1,33 @@
+{
+    "version": 1,
+    "author": "Felipe Damasceno",
+    "editor": "wokwi",
+    "parts": [
+      { "type": "wokwi-esp32-devkit-v1", "id": "esp", "top": -43.3, "left": 139, "attrs": {} },
+      {
+        "type": "wokwi-potentiometer",
+        "id": "sensorTurbidez",
+        "top": -87.7,
+        "left": 9.4,
+        "attrs": {}
+      },
+      { "type": "wokwi-potentiometer", "id": "sensorpH", "top": -87.7, "left": -77, "attrs": {} }
+    ],
+    "connections": [
+      [ "esp:TX0", "$serialMonitor:RX", "", [] ],
+      [ "esp:RX0", "$serialMonitor:TX", "", [] ],
+      [ "esp:3V3", "turbidez:VCC", "red", [] ],
+      [ "esp:GND", "turbidez:GND", "black", [] ],
+      [ "esp:3V3", "ph:VCC", "red", [] ],
+      [ "esp:GND", "ph:GND", "black", [] ],
+      [ "esp:A34", "turbidez:OUT", "green", [] ],
+      [ "esp:A35", "ph:OUT", "blue", [] ],
+      [ "sensorTurbidez:SIG", "esp:D35", "green", [ "v0" ] ],
+      [ "esp:D34", "sensorpH:SIG", "green", [ "h0" ] ],
+      [ "sensorTurbidez:GND", "esp:GND.2", "black", [ "v0" ] ],
+      [ "sensorpH:GND", "esp:GND.1", "black", [ "v0" ] ],
+      [ "esp:3V3", "sensorTurbidez:VCC", "green", [ "v0" ] ],
+      [ "esp:3V3", "sensorpH:VCC", "green", [ "v0" ] ]
+    ],
+    "dependencies": {}
+  }
