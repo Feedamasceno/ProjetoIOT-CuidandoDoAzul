@@ -10,7 +10,7 @@ O sistema mede a turbidez e o pH de uma solução e envia as leituras para um br
 ### Funcionalidades
 - Monitoramento de turbidez e pH com o ESP32.
 - Transmissão dos dados para um broker MQTT (HiveMQ).
-- Integração com Node-RED para exibição em tempo real.
+- Integração com Node-RED para exibição.
 
 - ### Arquitetura do sistema
 
