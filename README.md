@@ -4,7 +4,6 @@ Este projeto monitora parâmetros de turbidez e pH utilizando um dispositivo ESP
 
 ![Projeto de Internet das Coisas para Monitoramento de Qualidade da Água](images/azul1.jpg)
 
-
 ## Descrição do projeto
 O sistema mede a turbidez e o pH de uma solução e envia as leituras para um broker MQTT, utilizando a plataforma de programação "low code" Node-RED para processar e exibir os dados em um dashboard.
 
@@ -12,6 +11,10 @@ O sistema mede a turbidez e o pH de uma solução e envia as leituras para um br
 - Monitoramento de turbidez e pH com o ESP32.
 - Transmissão dos dados para um broker MQTT (HiveMQ).
 - Integração com Node-RED para exibição em tempo real.
+
+- ### Arquitetura do sistema
+
+- ![Arquitetura do sistema Cuidando do Azul](images/arquitetura.jpg)
 
 ## Estrutura do repositório
 - `codigofonte-mqtt/`: Código fonte do ESP32 para realizar a leitura dos sensores e enviar os dados via MQTT.
