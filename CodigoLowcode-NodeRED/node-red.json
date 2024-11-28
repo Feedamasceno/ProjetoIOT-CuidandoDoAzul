@@ -1,0 +1,344 @@
+[
+    {
+        "id": "05f895f0b56abf7f",
+        "type": "tab",
+        "label": "Projeto ",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "d41e3ca2a2ae9e53",
+        "type": "node-red-contrib-whatsapp-cmb-send-message",
+        "z": "05f895f0b56abf7f",
+        "name": "WhatsApp",
+        "credtype": "account",
+        "account": "a9c34b1294f52f17",
+        "text": "payload",
+        "phonenumbervalue": "",
+        "apikeyvalue": "",
+        "apikeyinputtypemessage": "msg",
+        "phonenumberinputtypemessage": "msg",
+        "inputtypemessage": "msg",
+        "rejectssl": false,
+        "x": 1150,
+        "y": 180,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "fb841f604633722d",
+        "type": "join",
+        "z": "05f895f0b56abf7f",
+        "name": "",
+        "mode": "custom",
+        "build": "array",
+        "property": "payload",
+        "propertyType": "msg",
+        "key": "topic",
+        "joiner": "\\n",
+        "joinerType": "str",
+        "useparts": false,
+        "accumulate": false,
+        "timeout": "",
+        "count": "2",
+        "reduceRight": false,
+        "reduceExp": "",
+        "reduceInit": "",
+        "reduceInitType": "",
+        "reduceFixup": "",
+        "x": 750,
+        "y": 180,
+        "wires": [
+            [
+                "84bf70e51d7d1824"
+            ]
+        ]
+    },
+    {
+        "id": "84bf70e51d7d1824",
+        "type": "function",
+        "z": "05f895f0b56abf7f",
+        "name": "function 5",
+        "func": "var turbidezData = msg.payload[1];  // O primeiro valor é a turbidez\nvar phData = msg.payload[0]; // O segundo valor é o pH\n\n// Inicializa a variável para a mensagem\nlet mensagem = `O valor da turbidez é ${turbidezData} NTU e o pH é ${phData}.`;\n\n// Verifica se o pH está fora do intervalo ideal (6-8)\nif (phData < 6 || phData > 8) {\n    mensagem += ` Alerta! O pH está fora do intervalo ideal para consumo/uso.`;\n}\n\n// Verifica se a turbidez está acima do limite crítico (5 NTU)\nif (turbidezData > 5) {\n    mensagem += ` Alerta! A turbidez ultrapassou o limite de 5 NTU, indicando possível contaminação ou necessidade de tratamento.`;\n}\n\n// Formata a mensagem para envio no WhatsApp\nmsg.payload = mensagem;\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 940,
+        "y": 180,
+        "wires": [
+            [
+                "d41e3ca2a2ae9e53"
+            ]
+        ]
+    },
+    {
+        "id": "e9dd6c2ab0d8bd0b",
+        "type": "change",
+        "z": "05f895f0b56abf7f",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload.main.temp",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 560,
+        "y": 240,
+        "wires": [
+            [
+                "fb841f604633722d"
+            ]
+        ]
+    },
+    {
+        "id": "c8657f185908300b",
+        "type": "mqtt in",
+        "z": "05f895f0b56abf7f",
+        "name": "HiveMQ",
+        "topic": "TESTMACK10408854/Turbidez",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "ddebd3bb9140c5bd",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 120,
+        "y": 140,
+        "wires": [
+            [
+                "55a0dc4d543491e8"
+            ]
+        ]
+    },
+    {
+        "id": "937d1a72b5cc752e",
+        "type": "change",
+        "z": "05f895f0b56abf7f",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload.sec.temp",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 560,
+        "y": 140,
+        "wires": [
+            [
+                "fb841f604633722d"
+            ]
+        ]
+    },
+    {
+        "id": "55a0dc4d543491e8",
+        "type": "function",
+        "z": "05f895f0b56abf7f",
+        "name": "Turbidez",
+        "func": "// Verifica se a mensagem contém a turbidez\nif (msg.payload && typeof msg.payload === 'number') {\n    let turbidez = msg.payload;  // Coleta o valor da turbidez do payload\n\n    // Exibe a turbidez no painel de depuração\n    node.warn(\"Turbidez: \" + turbidez + \" NTU\");\n\n    // Retorna apenas o valor da turbidez no payload\n    msg.payload = turbidez;\n\n    return msg;\n} else {\n    // Se o payload não for um número válido, emite um alerta\n    node.warn(\"Payload inválido: \" + msg.payload);\n    return null;  // Não segue o fluxo\n}\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 340,
+        "y": 140,
+        "wires": [
+            [
+                "937d1a72b5cc752e"
+            ]
+        ]
+    },
+    {
+        "id": "70ae18919595fff8",
+        "type": "mqtt in",
+        "z": "05f895f0b56abf7f",
+        "name": "HiveMQ",
+        "topic": "TESTMACK10408854/pH",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "ddebd3bb9140c5bd",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 120,
+        "y": 240,
+        "wires": [
+            [
+                "2f7377d602e31023"
+            ]
+        ]
+    },
+    {
+        "id": "2f7377d602e31023",
+        "type": "function",
+        "z": "05f895f0b56abf7f",
+        "name": "Ph",
+        "func": "// Verifica se a mensagem contém o valor de pH\nif (msg.payload && typeof msg.payload === 'number') {\n    let ph = msg.payload;  // Coleta o valor do pH do payload\n\n    // Exibe o pH no painel de depuração\n    node.warn(\"pH: \" + ph);\n\n    // Retorna apenas o valor do pH no payload\n    msg.payload = ph;\n\n    return msg;\n} else {\n    // Se o payload não for um número válido, emite um alerta\n    node.warn(\"Payload inválido: \" + msg.payload);\n    return null;  // Não segue o fluxo\n}\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 330,
+        "y": 240,
+        "wires": [
+            [
+                "e9dd6c2ab0d8bd0b"
+            ]
+        ]
+    },
+    {
+        "id": "216a3ffdf98966ac",
+        "type": "mqtt in",
+        "z": "05f895f0b56abf7f",
+        "name": "HiveMQ",
+        "topic": "TESTMACK10408854/Turbidez",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "ddebd3bb9140c5bd",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 120,
+        "y": 620,
+        "wires": [
+            [
+                "07d93fb42cc1fbe1"
+            ]
+        ]
+    },
+    {
+        "id": "07d93fb42cc1fbe1",
+        "type": "influxdb out",
+        "z": "05f895f0b56abf7f",
+        "influxdb": "1efe24c646787e46",
+        "name": "BucketGP11",
+        "measurement": "Turbidez",
+        "precision": "",
+        "retentionPolicy": "",
+        "database": "database",
+        "precisionV18FluxV20": "ms",
+        "retentionPolicyV18Flux": "",
+        "org": "8aac8f666881dbf9",
+        "bucket": "WaterBucket",
+        "x": 910,
+        "y": 620,
+        "wires": []
+    },
+    {
+        "id": "1db4a46df2591a19",
+        "type": "mqtt in",
+        "z": "05f895f0b56abf7f",
+        "name": "HiveMQ",
+        "topic": "TESTMACK10408854/pH",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "ddebd3bb9140c5bd",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 120,
+        "y": 720,
+        "wires": [
+            [
+                "46a1b42b481edd41"
+            ]
+        ]
+    },
+    {
+        "id": "46a1b42b481edd41",
+        "type": "influxdb out",
+        "z": "05f895f0b56abf7f",
+        "influxdb": "1efe24c646787e46",
+        "name": "BucketGP11",
+        "measurement": "pH",
+        "precision": "",
+        "retentionPolicy": "",
+        "database": "database",
+        "precisionV18FluxV20": "ms",
+        "retentionPolicyV18Flux": "",
+        "org": "8aac8f666881dbf9",
+        "bucket": "WaterBucket",
+        "x": 910,
+        "y": 720,
+        "wires": []
+    },
+    {
+        "id": "a9c34b1294f52f17",
+        "type": "node-red-contrib-whatsapp-cmb-account",
+        "name": "WhatsApp API Account"
+    },
+    {
+        "id": "ddebd3bb9140c5bd",
+        "type": "mqtt-broker",
+        "name": "HiveMQ",
+        "broker": "broker.hivemq.com",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "1efe24c646787e46",
+        "type": "influxdb",
+        "hostname": "UTDWRw14G8JkOJn8Kgd7_iavoNQIq8_3SUNnVtCzgmOi4H262q_6IzobtnHDnCr6F3GUHg-2b-4NZQWNhAGtBw==",
+        "port": "8086",
+        "protocol": "http",
+        "database": "database",
+        "name": "InfluxDB-GROUP11",
+        "usetls": false,
+        "tls": "",
+        "influxdbVersion": "2.0",
+        "url": "https://us-east-1-1.aws.cloud2.influxdata.com",
+        "timeout": "10",
+        "rejectUnauthorized": true
+    }
+]
